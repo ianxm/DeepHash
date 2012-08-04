@@ -1,5 +1,3 @@
-import haxe.FastList;
-
 /**
    DeepHash is a tree data structure made up of nested hashes.  Items
    within the tree are located using a path, which is a list of keys.   
@@ -8,28 +6,30 @@ import haxe.FastList;
 class DeepHash<K,V> extends Node<K,V>
 {
     public var accum :V->V->V;                              // accumulator function
+    public var cmp :K->K->Int;                              // sort function
 
     /**
        create a new tree
     */
     public function new()
-    {                                                       // root doesn't have a parent or a key
-        super(null, null);
+    {
+        super(this, null, null);                            // root doesn't have a parent or a key
         val = null;
         children = null;
         accum = function(a,b){ return a; }
+        cmp = null;                                         // dont sort
     }
 
     /**
        set a value at the specified path. create nodes as needed
        path variable is modified!
     */
-    override public function set(path :List<K>, newVal :V, ?accum :V->V->V )
+    override public function set(path :List<K>, newVal :V)
     {
-        super.set(path, newVal, this.accum);
+        super.set(path, newVal);
     }
 
-    /*
+    /**
        pre-order traversal of paths, not lazy
     */
     public function getPathIterator()
@@ -41,7 +41,7 @@ class DeepHash<K,V> extends Node<K,V>
         return paths.iterator();
     }
 
-    /*
+    /**
        pre-order traversal of values, not lazy
     */
     public function getValuesIterator()
@@ -59,14 +59,16 @@ private class Node<K,V>
 {
     private var key :K;                                     // paths are made up of keys
     private var val :V;                                     // node value
+    private var root :DeepHash<K,V>;                        // root of tree
     private var parent :Node<K,V>;                          // this nodes parent, null for root
-    private var children :FastList<Node<K,V>>;                  // list of child nodes, may be null
+    private var children :Array<Node<K,V>>;                 // list of child nodes, may be null
 
     /**
        create a new tree node
     */
-    public function new(p, k)
+    public function new(r, p, k)
     {
+        root = r;
         parent = p;
         key = k;
         val = null;
@@ -77,28 +79,28 @@ private class Node<K,V>
        set a value at the specified path. create nodes as needed
        path variable is modified!
     */
-    public function set(path :List<K>, newVal :V, ?accum :V->V->V)
+    public function set(path :List<K>, newVal :V)
     {
         if( path.isEmpty() )
         {
             val = newVal;
             return;
         }
-        val = accum(val, newVal);
+        val = root.accum(val, newVal);
 
         if( children == null )
-            children = new FastList<Node<K,V>>();
+            children = new Array<Node<K,V>>();
         var key = path.pop();
         var child = first(children, function(ii) return ii.key==key);
         if( child == null )
         {
-            child = new Node<K,V>(this, key);
-            children.add(child);
+            child = new Node<K,V>(root, this, key);
+            children.push(child);
         }
-        child.set(path, newVal, accum);
+        child.set(path, newVal);
     }
 
-    /*
+    /**
        get the value at the specified path. return null if not found
        path variable is modified!
     */
@@ -126,34 +128,42 @@ private class Node<K,V>
         if( path == null )
             path = new List<K>();
         path.push(key);
-        if( !Std.is(parent,DeepHash) )                      // ignore root
+        if( parent != root )                                // ignore root
             parent.getPath(path);
         return path;
     }
 
-    /*
+    /**
        pre-order traversal of paths, not lazy
     */
     private function getPaths(paths :List<List<K>>)
     {
         paths.add(getPath());
         if( children != null )
+        {
+            if( root.cmp != null )
+                children.sort( function(a,b) return root.cmp(a.key,b.key) );
             for( child in children )
                 child.getPaths(paths);
+        }
     }
 
-    /*
+    /**
        pre-order traversal of values, not lazy
     */
     private function getValues(?nodes)
     {
         nodes.add(val);
         if( children != null )
+        {
+            if( root.cmp != null )
+                children.sort( function(a,b) return root.cmp(a.key,b.key) );
             for( child in children )
                 child.getValues(nodes);
+        }
     }
 
-    /*
+    /**
        utility to find the first item that matches in a list
     */
     private static function first<A>(it:Iterable<A>, f:A->Bool)

@@ -26,3 +26,8 @@ getPathIterator()
 getValuesIterator()
         pre-order traversal of values, not lazy
 
+accum :V->V->V
+        set a node's value by accumulating the values of its children
+
+cmp : K->K->Int
+        comparator function to sort keys during traversal

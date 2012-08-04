@@ -2,5 +2,5 @@
     <tag v="cross" />
     <user name="ianxm"/>
     <description>Data structure made up of nested hashes</description>
-    <version name="1.0">initial haxelib release</version>
+    <version name="1.1">sort during traversal</version>
 </project>

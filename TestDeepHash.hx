@@ -88,8 +88,8 @@ class TestDeepHash extends haxe.unit.TestCase
         tree.set([1,3].list(), 1.3);
         var iter = tree.getValuesIterator();
         assertEquals(1.1, iter.next());
-        assertEquals(1.3, iter.next());
         assertEquals(1.2, iter.next());
+        assertEquals(1.3, iter.next());
         assertFalse(iter.hasNext());
     }
 
@@ -100,8 +100,8 @@ class TestDeepHash extends haxe.unit.TestCase
         tree.set([1,3].list(), 1.3);
         var iter = tree.getValuesIterator();
         assertEquals(null, iter.next());
-        assertEquals(1.3, iter.next());
         assertEquals(1.2, iter.next());
+        assertEquals(1.3, iter.next());
         assertFalse(iter.hasNext());
     }
 
@@ -125,6 +125,23 @@ class TestDeepHash extends haxe.unit.TestCase
         var iter = tree.getValuesIterator();
         assertEquals(1.2, iter.next());
         assertEquals(1.2, iter.next());
+        assertFalse(iter.hasNext());
+    }
+
+    public function testIteratorValuesSorted()
+    {
+        var tree = new DeepHash<String, Float>();
+        tree.cmp = function( a:String, b:String ) return (a<b)? -1 : ((a>b)? 1 : 0);
+        tree.set(["one"].list(), 1.0);
+        tree.set(["one","2"].list(), 2.2);
+        tree.set(["one","1"].list(), 2.1);
+        tree.set(["one","3"].list(), 2.3);
+
+        var iter = tree.getValuesIterator();
+        assertEquals(1.0, iter.next());
+        assertEquals(2.1, iter.next());
+        assertEquals(2.2, iter.next());
+        assertEquals(2.3, iter.next());
         assertFalse(iter.hasNext());
     }
 }

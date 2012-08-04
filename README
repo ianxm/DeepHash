@@ -20,6 +20,9 @@ get(path :List<K>)
         get the value at the specified path. return null if not found
         path variable is modified!
 
+has(path :List<K>)
+        tell if the tree has a node at the given path
+
 getPathIterator()
         pre-order traversal of paths, not lazy
 

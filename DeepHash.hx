@@ -121,6 +121,24 @@ private class Node<K,V>
     }
 
     /**
+       tell if the tree has a node at the given path
+     */
+    public function has(path :List<K>)
+    {
+        if( path.isEmpty() )
+            return true;
+        if( children == null )
+            return false;
+        
+        var key = path.pop();
+        var child = first(children, function(ii) return ii.key==key);
+        return if( child==null )
+            false;
+        else
+            child.has(path);
+    }
+
+    /**
        builds the path from a node
      */
     private function getPath(?path :List<K>)

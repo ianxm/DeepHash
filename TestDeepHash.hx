@@ -16,6 +16,14 @@ class TestDeepHash extends haxe.unit.TestCase
         assertEquals("one", tree.get([1].list()));
     }
 
+    public function testHasChild()
+    {
+        var tree = new DeepHash<Int, String>();
+        tree.set([1].list(), "one");
+        assertEquals("one", tree.get([1].list()));
+        assertEquals(true, tree.has([1].list()));
+    }
+
     public function testSetChildTwice()
     {
         var tree = new DeepHash<Int, String>();
@@ -30,6 +38,16 @@ class TestDeepHash extends haxe.unit.TestCase
         var tree = new DeepHash<Int, String>();
         tree.set([1,2].list(), "one.two");
         assertEquals("one.two", tree.get([1,2].list()));
+    }
+
+    public function testHasTwoDeep()
+    {
+        var tree = new DeepHash<Int, String>();
+        tree.set([1,2].list(), "one.two");
+        assertEquals("one.two", tree.get([1,2].list()));
+        assertEquals(true, tree.has([1,2].list()));
+        assertEquals(true, tree.has([1].list()));
+        assertEquals(false, tree.has([2].list()));
     }
 
     public function testSiblings()

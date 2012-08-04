@@ -96,6 +96,8 @@ private class Node<K,V>
         {
             child = new Node<K,V>(root, this, key);
             children.push(child);
+            if( root.cmp != null )
+                children.sort( function(a,b) return root.cmp(a.key,b.key) );
         }
         child.set(path, newVal);
     }
@@ -158,12 +160,8 @@ private class Node<K,V>
     {
         paths.add(getPath());
         if( children != null )
-        {
-            if( root.cmp != null )
-                children.sort( function(a,b) return root.cmp(a.key,b.key) );
             for( child in children )
                 child.getPaths(paths);
-        }
     }
 
     /**
@@ -173,12 +171,8 @@ private class Node<K,V>
     {
         nodes.add(val);
         if( children != null )
-        {
-            if( root.cmp != null )
-                children.sort( function(a,b) return root.cmp(a.key,b.key) );
             for( child in children )
                 child.getValues(nodes);
-        }
     }
 
     /**

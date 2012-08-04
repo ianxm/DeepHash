@@ -88,8 +88,8 @@ class TestDeepHash extends haxe.unit.TestCase
         tree.set([1,3].list(), 1.3);
         var iter = tree.getValuesIterator();
         assertEquals(1.1, iter.next());
-        assertEquals(1.2, iter.next());
         assertEquals(1.3, iter.next());
+        assertEquals(1.2, iter.next());
         assertFalse(iter.hasNext());
     }
 
@@ -100,8 +100,8 @@ class TestDeepHash extends haxe.unit.TestCase
         tree.set([1,3].list(), 1.3);
         var iter = tree.getValuesIterator();
         assertEquals(null, iter.next());
-        assertEquals(1.2, iter.next());
         assertEquals(1.3, iter.next());
+        assertEquals(1.2, iter.next());
         assertFalse(iter.hasNext());
     }
 

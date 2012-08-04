@@ -1,3 +1,5 @@
+import haxe.FastList;
+
 /**
    DeepHash is a tree data structure made up of nested hashes.  Items
    within the tree are located using a path, which is a list of keys.   
@@ -58,7 +60,7 @@ private class Node<K,V>
     private var key :K;                                     // paths are made up of keys
     private var val :V;                                     // node value
     private var parent :Node<K,V>;                          // this nodes parent, null for root
-    private var children :List<Node<K,V>>;                  // list of child nodes, may be null
+    private var children :FastList<Node<K,V>>;                  // list of child nodes, may be null
 
     /**
        create a new tree node
@@ -85,7 +87,7 @@ private class Node<K,V>
         val = accum(val, newVal);
 
         if( children == null )
-            children = new List<Node<K,V>>();
+            children = new FastList<Node<K,V>>();
         var key = path.pop();
         var child = first(children, function(ii) return ii.key==key);
         if( child == null )

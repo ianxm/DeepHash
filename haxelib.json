@@ -1,0 +1,13 @@
+{
+  "name": "DeepHash",
+  "license": "BSD",
+  "classPath": "src/",
+  "tags": ["cross"],
+  "description": "Data structure made up of nested hashes",
+  "contributors": ["ianxm"],
+  "releasenote": "ported for haxe 3",
+  "version": "0.4.0",
+  "url": "https://github.com/ianxm/DeepHash",
+  "dependencies": {
+  }
+}

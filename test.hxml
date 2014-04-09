@@ -1,3 +1,4 @@
 -neko test.n
 -main TestSuite
+-cp src
 -cmd neko test.n

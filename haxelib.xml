@@ -1,6 +1,0 @@
-<project name="DeepHash" url="https://github.com/ianxm/DeepHash" license="BSD">
-    <tag v="cross" />
-    <user name="ianxm"/>
-    <description>Data structure made up of nested hashes</description>
-    <version name="1.2">sort on insert</version>
-</project>
